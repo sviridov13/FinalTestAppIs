@@ -27,15 +27,21 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
+import static com.sviridov.testapp.finaltestappis.NotificationUtils.ANDROID_CHANNEL_ID;
+
 
 public class MainActivity extends AppCompatActivity {
     //public static final String NOTIFICATION_CHANNEL_ID = "4565";
 
     ArrayList<Item> arrayList;
     ListView lv;
+    NotificationUtils mNotificationUtils;
+    int notificationCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        notificationCount = 1;
+        mNotificationUtils = new NotificationUtils(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -55,7 +61,18 @@ public class MainActivity extends AppCompatActivity {
         );
         lv.setAdapter(adapter);
 
-
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Notification.Builder nb = mNotificationUtils.getAndroidChannelNotification("Уведомление", "By N.S.");
+                mNotificationUtils.getManager().notify(101, nb.build());
+                if (notificationCount % 2 == 0) {
+                    mNotificationUtils.getManager().cancel(101);
+                }
+                notificationCount++;
+            }
+        });
     }
 
     class ReadJSON extends AsyncTask<String, Integer, String> {
@@ -69,9 +86,9 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String content) {
             try {
                 //JSONObject jsonObject = new JSONObject(content);
-                JSONArray jsonArray =  new JSONArray(content);
+                JSONArray jsonArray = new JSONArray(content);
 
-                for(int i =0; i<jsonArray.length(); i++){
+                for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject productObject = jsonArray.getJSONObject(i);
                     arrayList.add(new Item(
                             productObject.getString("title"),
@@ -86,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                     getApplicationContext(), R.layout.custom_list_layout, arrayList
             );
             lv.setAdapter(adapter);
+
         }
     }
 
