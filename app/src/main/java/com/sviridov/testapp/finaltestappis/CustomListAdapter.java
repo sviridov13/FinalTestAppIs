@@ -42,8 +42,6 @@ public class CustomListAdapter extends ArrayAdapter<Item> {
         TextView txtName = (TextView) convertView.findViewById(R.id.txtName);
         txtName.setText(item.getTitle());
 
-        TextView txtPrice = (TextView) convertView.findViewById(R.id.txtPrice);
-        txtPrice.setText(item.getId());
 
         return convertView;
 

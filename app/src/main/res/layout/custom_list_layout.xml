@@ -22,20 +22,12 @@
             android:id="@+id/txtName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:textSize="20sp"
-            android:textColor="#c60a0a"
+            android:textColor="#000000"
             android:padding="10dp"
             android:text="Product name"/>
 
-        <TextView
-            android:id="@+id/txtPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:textSize="20sp"
-            android:textColor="#101e99"
-            android:text="Price"/>
 
     </LinearLayout>
 </LinearLayout>

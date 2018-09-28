@@ -1,16 +1,8 @@
 package com.sviridov.testapp.finaltestappis;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.AsyncTask;
-import android.support.v4.app.NotificationCompat;
+import android.service.notification.StatusBarNotification;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -31,16 +23,15 @@ import static com.sviridov.testapp.finaltestappis.NotificationUtils.ANDROID_CHAN
 
 
 public class MainActivity extends AppCompatActivity {
-    //public static final String NOTIFICATION_CHANNEL_ID = "4565";
 
     ArrayList<Item> arrayList;
     ListView lv;
     NotificationUtils mNotificationUtils;
-    int notificationCount;
+    boolean notificationIsActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        notificationCount = 1;
+        notificationIsActive = false;
         mNotificationUtils = new NotificationUtils(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -65,12 +56,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Notification.Builder nb = mNotificationUtils.getAndroidChannelNotification("Уведомление", "By N.S.");
-                mNotificationUtils.getManager().notify(101, nb.build());
-                if (notificationCount % 2 == 0) {
-                    mNotificationUtils.getManager().cancel(101);
+                Notification.Builder nb = mNotificationUtils.getAndroidChannelNotification("Уведомление", Long.toString(id));
+                //mNotificationUtils.getManager().notify(101, nb.build());
+                if (!notificationIsActive) {
+                    mNotificationUtils.getManager().notify(101, nb.build());
+                    notificationIsActive = true;
                 }
-                notificationCount++;
+                else {
+                    mNotificationUtils.getManager().cancel(101);
+                    notificationIsActive = false;
+                }
             }
         });
     }
@@ -92,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject productObject = jsonArray.getJSONObject(i);
                     arrayList.add(new Item(
                             productObject.getString("title"),
-                            productObject.getString("id"),
                             productObject.getString("url")
                     ));
                 }
